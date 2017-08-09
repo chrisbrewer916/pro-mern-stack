@@ -156,12 +156,7 @@ export default class IssueList extends React.Component {
     return (
       <div>
         <Panel collapsible header="Filter">
-<<<<<<< HEAD
-          <IssueFilter setFilter={this.setFilter}
-            initFilter={queryString.parse(this.props.location.search)} />
-=======
           <IssueFilter setFilter={this.setFilter} initFilter={queryString.parse(this.props.location.search)} />
->>>>>>> ae3c1e62e108786b11ca3b2d115b7f90a37f0379
         </Panel>
         <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
         <IssueAdd createIssue={this.createIssue} />
