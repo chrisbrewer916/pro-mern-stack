@@ -3,7 +3,6 @@ import 'whatwg-fetch';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
-import IssueAdd from './IssueAdd.jsx';
 import IssueFilter from './IssueFilter.jsx';
 import Toast from './Toast.jsx';
 
@@ -75,7 +74,6 @@ export default class IssueList extends React.Component {
       issues: [],
       toastVisable: false, toastMessage: '', toastType: 'success',
     };
-    this.createIssue = this.createIssue.bind(this);
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
     this.showError = this.showError.bind(this);
@@ -134,31 +132,6 @@ export default class IssueList extends React.Component {
     });
   }
 
-  createIssue(newIssue) {
-    fetch('/api/issues', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newIssue),
-    }).then((response) => {
-      if (response.ok) {
-        response.json().then((updatedIssue) => {
-          updatedIssue.created = new Date(updatedIssue.created);
-          if (updatedIssue.completionDate) {
-            updatedIssue.completionDate = new Date(updatedIssue.completionDate);
-          }
-          const newIssues = this.state.issues.concat(updatedIssue);
-          this.setState({ issues: newIssues });
-        });
-      } else {
-        response.json().then((error) => {
-          this.showError(`Failed to add issue: ${error.message}`);
-        });
-      }
-    }).catch((err) => {
-      this.showError(`Error in sending data to server: ${err.message}`);
-    });
-  }
-
   deleteIssue(id) {
     fetch(`/api/issues/${id}`, { method: 'DELETE' }).then(response => {
       if (!response.ok) alert('Failed to delete issue');
@@ -173,7 +146,6 @@ export default class IssueList extends React.Component {
           <IssueFilter setFilter={this.setFilter} initFilter={queryString.parse(this.props.location.search)} />
         </Panel>
         <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
-        <IssueAdd createIssue={this.createIssue} />
         <Toast showing={this.state.toastVisable} message={this.state.toastMessage}
           onDismiss={this.dismissToast} bsStyle={this.state.toastType}
         />
